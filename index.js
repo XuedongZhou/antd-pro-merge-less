@@ -6,45 +6,17 @@ const less = require('less');
 const hash = require('hash.js');
 const rimraf = require('rimraf');
 const uglifycss = require('uglifycss');
-const defaultDarkTheme = require('@ant-design/dark-theme');
 
-const { winPath } = require('umi-utils');
+const winPath = require('./withPath');
 const genModuleLess = require('./genModuleLess');
 const getVariable = require('./getVariable');
 const loopAllLess = require('./loopAllLess');
 
 const darkTheme = {
-  ...defaultDarkTheme.default,
   dark: true,
-  '@white': '#fff',
-  '@light': '#fff',
-  '@text-color': 'fade(@white, 65%)',
-  '@heading-color': 'fade(@white, 85%)',
-  // 移动
-  '@screen-sm': '767.9px',
-  // 超小屏
-  '@screen-xs': '375px',
-
-  // 官网
-  '@site-text-color': '@text-color',
-  '@site-border-color-split': 'fade(@light, 5)',
-  '@site-heading-color': '@heading-color',
-  '@site-header-box-shadow': '0 0.3px 0.9px rgba(0, 0, 0, 0.12), 0 1.6px 3.6px rgba(0, 0, 0, 0.12)',
-  '@home-text-color': '@text-color',
-
-  // 自定义需要找设计师
-  '@gray-8': '@text-color',
-  '@background-color-base': '#555',
-
-  // pro
-  '@pro-header-box-shadow': '@site-header-box-shadow',
 };
 
-const genHashCode = content =>
-  hash
-    .sha256()
-    .update(content)
-    .digest('hex');
+const genHashCode = (content) => hash.sha256().update(content).digest('hex');
 
 const tempPath = winPath(path.join(__dirname, './.temp/'));
 
@@ -71,7 +43,7 @@ const loadAntd = async (ignoreAntd, { dark = false, compact = false }) => {
     const antdPath = require.resolve('antd');
     if (fs.existsSync(antdPath)) {
       await loopAllLess(path.resolve(path.join(antdPath, '../../es/')), ignoreFiles).then(
-        content => {
+        (content) => {
           fs.writeFileSync(
             path.join(tempPath, './antd.less'),
             `@import '../color/bezierEasing';
@@ -84,8 +56,6 @@ const loadAntd = async (ignoreAntd, { dark = false, compact = false }) => {
       );
       return true;
     }
-
-    // eslint-disable-next-line no-empty
   } catch (error) {
     console.log(error);
   }
@@ -105,7 +75,7 @@ const loadLibraryComponents = async ({ filterFileLess, extraLibraries = [] }) =>
   try {
     if (components) {
       const jobs = [];
-      components.forEach(item => {
+      components.forEach((item) => {
         if (filterFileLess && !filterFileLess(item)) {
           return;
         }
@@ -144,7 +114,7 @@ const getModifyVars = (theme = 'light', modifyVars, disableExtendsDark) => {
   }
 };
 
-const getOldFile = filePath => {
+const getOldFile = (filePath) => {
   if (fs.existsSync(filePath)) {
     return fs.readFileSync(filePath);
   }
@@ -157,7 +127,7 @@ const genProjectLess = (
   filePath,
   { isModule, loadAny, cache, ignoreAntd, ignoreProLayout, ...rest },
 ) =>
-  genModuleLess(filePath, { isModule, ...rest }).then(async content => {
+  genModuleLess(filePath, { isModule, ...rest }).then(async (content) => {
     if (cache === false) {
       rimraf.sync(tempPath);
     }
@@ -191,7 +161,7 @@ const genProjectLess = (
           tempFilePath,
           fs.readFileSync(tempFilePath),
           loadAny,
-        ).then(result => result.content.toString());
+        ).then((result) => result.content.toString());
 
         fs.writeFileSync(
           winPath(path.join(tempPath, 'pro.less')),
@@ -245,8 +215,8 @@ const renderLess = async (
         filename: path.resolve(proLess),
       })
       // 如果需要压缩，再打开压缩功能默认打开
-      .then(out => (min ? uglifycss.processString(out.css) : out.css))
-      .catch(e => {
+      .then((out) => (min ? uglifycss.processString(out.css) : out.css))
+      .catch((e) => {
         console.log(e);
       })
   );
@@ -271,7 +241,7 @@ const build = async (
       return;
     }
 
-    const loop = async index => {
+    const loop = async (index) => {
       if (!modifyVarsArray[index]) {
         return false;
       }
@@ -303,4 +273,4 @@ const build = async (
   }
 };
 
-module.exports = build;
+module.exports = { build, winPath };

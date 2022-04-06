@@ -3,18 +3,24 @@
 使用方式：
 
 ```js
-const genCss = require('antd-pro-merge-less');
+const { build } = require('antd-pro-merge-less');
+const darkTheme = require('antd/dist/dark-theme');
+const lightTheme = require('antd/dist/default-theme');
 
-genCss(
+build(
   'C:/GitHub/ant-design',
   [
     {
       theme: 'dark',
+      modifyVars: {
+        ...darkTheme
+      },
       fileName: './.temp/dark.css',
     },
     {
       fileName: './.temp/mingQing.css',
       modifyVars: {
+        ...lightTheme,
         '@primary-color': '#13C2C2',
       },
     },
@@ -30,8 +36,8 @@ genCss(
     ignoreProLayout: true,
     // 不使用缓存
     cache: false,
-    filterFileLess: filename => boolean,
-    extraLibraries: []
+    filterFileLess: (filename) => boolean,
+    extraLibraries: [],
   },
 );
 ```

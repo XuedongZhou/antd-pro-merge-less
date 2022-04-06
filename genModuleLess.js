@@ -6,7 +6,7 @@
  */
 const glob = require('glob');
 const uniqBy = require('lodash.uniqby');
-const { winPath } = require('umi-utils');
+const winPath = require('./withPath');
 
 const AddLocalIdentName = require('./AddLocalIdentName');
 const replaceDefaultLess = require('./replaceDefaultLess');
@@ -19,10 +19,10 @@ const genModuleLess = (parents, { isModule, filterFileLess }) => {
   lessArray = [];
   glob
     .sync(winPath(`${parents}/**/**.less`), {
-      ignore: ['**/node_modules/**', '**/dist/**', '**/es/**', '**/lib/**', '**/_site/**'],
+      ignore: ['**/node_modules/**', '**/dist/**', '**/es/**', '**/lib/**'],
     })
     .sort((a, b) => lessOrder(a) - lessOrder(b))
-    .filter(filePath => {
+    .filter((filePath) => {
       if (
         filePath.includes('ant.design.pro.less') ||
         filePath.includes('global.less') ||
@@ -37,15 +37,15 @@ const genModuleLess = (parents, { isModule, filterFileLess }) => {
       }
       return true;
     })
-    .forEach(realPath => {
+    .forEach((realPath) => {
       // post css add localIdentNamePlugin
       const fileContent = replaceDefaultLess(realPath);
       promiseList.push(AddLocalIdentName(realPath, fileContent, isModule));
     });
 
-  return Promise.all(promiseList).then(content => {
+  return Promise.all(promiseList).then((content) => {
     let allFileList = [];
-    content.map(item => {
+    content.map((item) => {
       const { fileList, name } = item.messages;
       allFileList = allFileList.concat([name, ...fileList]);
       return item;
