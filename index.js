@@ -7,7 +7,7 @@ const hash = require('hash.js');
 const rimraf = require('rimraf');
 const uglifycss = require('uglifycss');
 
-const winPath = require('./withPath');
+const withPath = require('./withPath');
 const genModuleLess = require('./genModuleLess');
 const getVariable = require('./getVariable');
 const loopAllLess = require('./loopAllLess');
@@ -18,7 +18,7 @@ const darkTheme = {
 
 const genHashCode = (content) => hash.sha256().update(content).digest('hex');
 
-const tempPath = winPath(path.join(__dirname, './.temp/'));
+const tempPath = withPath(path.join(__dirname, './.temp/'));
 
 const loadAntd = async (ignoreAntd, { dark = false, compact = false }) => {
   try {
@@ -135,7 +135,7 @@ const genProjectLess = (
       fs.mkdirSync(tempPath);
     }
 
-    const tempFilePath = winPath(path.join(tempPath, 'temp.less'));
+    const tempFilePath = withPath(path.join(tempPath, 'temp.less'));
 
     // 获取新旧文件的 hash
     const newFileHash = genHashCode(content);
@@ -152,7 +152,7 @@ const genProjectLess = (
     try {
       if (loadAny) {
         fs.writeFileSync(
-          winPath(path.join(tempPath, 'pro.less')),
+          withPath(path.join(tempPath, 'pro.less')),
           `@import './components';
            ${content}`,
         );
@@ -164,7 +164,7 @@ const genProjectLess = (
         ).then((result) => result.content.toString());
 
         fs.writeFileSync(
-          winPath(path.join(tempPath, 'pro.less')),
+          withPath(path.join(tempPath, 'pro.less')),
           `@import './components';
            ${lessContent}`,
         );
@@ -196,7 +196,7 @@ const renderLess = async (
   modifyVars,
   { min = true, ignoreAntd = false, disableExtendsDark = false },
 ) => {
-  const proLess = winPath(path.join(tempPath, './pro.less'));
+  const proLess = withPath(path.join(tempPath, './pro.less'));
   if (!fs.existsSync(proLess)) {
     return '';
   }
@@ -273,4 +273,4 @@ const build = async (
   }
 };
 
-module.exports = { build, winPath };
+module.exports = { build, withPath };

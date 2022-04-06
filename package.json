@@ -1,6 +1,6 @@
 {
-  "name": "antd-less-merge",
-  "version": "3.1.0",
+  "name": "merge-antd-less",
+  "version": "3.1.1",
   "description": "A webpack plugin for ant design pro less",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "merge",
     "less"
   ],
-  "author": "chenshuai2144",
+  "author": "XuedongZhou",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/XuedongZhou/antd-pro-merge-less"
