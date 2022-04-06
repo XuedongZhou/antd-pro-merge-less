@@ -1,6 +1,6 @@
 {
   "name": "merge-antd-less",
-  "version": "3.1.1",
+  "version": "3.1.4",
   "description": "A webpack plugin for ant design pro less",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,9 @@
     "url": "https://github.com/XuedongZhou/antd-pro-merge-less"
   },
   "homepage": "https://github.com/XuedongZhou/antd-pro-merge-less",
+  "peerDependencies": {
+    "antd": ">=4.17.0"
+  },
   "dependencies": {
     "css-selector-tokenizer": "^0.8.0",
     "fs-extra": "^10.0.1",
@@ -28,8 +31,8 @@
     "hash.js": "^1.1.7",
     "less": "^4.1.2",
     "lodash.uniqby": "^4.7.0",
-    "postcss": "^8.4.12",
-    "postcss-less": "^6.0.0",
+    "postcss": "^7.0.35",
+    "postcss-less": "^3.1.4",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "uglifycss": "^0.0.29"
